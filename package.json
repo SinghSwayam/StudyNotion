@@ -1,0 +1,12 @@
+{
+  "name": "studynotion-fullstack",
+  "private": true,
+  "scripts": {
+    "client": "cd client && npm start",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently -n \"client,server\" -c \"bgGreen,bgBlue\" \"npm run client\" \"npm run server\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
