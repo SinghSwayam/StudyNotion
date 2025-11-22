@@ -43,7 +43,7 @@ exports.resetPasswordToken = async (req, res) => {
         }
 
         // Create URL
-        const url = `http://study-notion-lovat-xi.vercel.app/update-password/${token}`;
+        const url = `http://study-notion-drab-phi.vercel.app/update-password/${token}`;
 
         // Send email containing URL
         const text = `Password reset link is: ${url}. It is valid for 10 minutes only.`;
