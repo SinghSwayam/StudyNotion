@@ -11,6 +11,7 @@ const cors = require("cors");
 const { cloudinaryConnect } = require("./config/cloudinary");
 const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -50,6 +51,31 @@ app.get("/", (req, res) => {
     success: true,
     message: "Your server is up and running....",
   });
+});
+
+app.get("/api/v1/health/db", async (req, res) => {
+  try {
+    const dbState = mongoose.connection.readyState;
+    if (dbState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: "Database is not connected",
+      });
+    }
+
+    await mongoose.connection.db.admin().ping();
+
+    return res.status(200).json({
+      success: true,
+      message: "Database ping successful",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Database ping failed",
+      error: error.message,
+    });
+  }
 });
 
 app.listen(PORT, () => {

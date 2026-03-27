@@ -1,0 +1,24 @@
+name: MongoDB Keep Alive
+
+on:
+  schedule:
+    # GitHub Actions cron uses UTC. 21:30 UTC = 03:00 Asia/Kolkata (IST, next day).
+    - cron: "30 21 1,16 * *"
+  workflow_dispatch:
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend DB health endpoint
+        env:
+          BACKEND_PING_URL: ${{ secrets.BACKEND_PING_URL }}
+        run: |
+          if [ -z "$BACKEND_PING_URL" ]; then
+            echo "BACKEND_PING_URL secret is not set"
+            exit 1
+          fi
+
+          echo "Pinging $BACKEND_PING_URL"
+          # Use retries for transient network issues.
+          curl --fail --silent --show-error --max-time 20 --retry 3 --retry-delay 5 "$BACKEND_PING_URL"
